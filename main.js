@@ -72,8 +72,14 @@ var b1 = new Button(canvas.width/2,canvas.height/2,100,50,startGame,makeImg('img
 var started = false;
 var buster = new Sprite('imgs/btb/0.png');
 buster.addAnimation('imgs/btb/btb.anims');
-
 buster.position = new Vector(300,300);
+buster.visible = false;
+
+var camflip = new Sprite('imgs/camflip/5.png');
+camflip.position = new Vector(canvas.width/2,canvas.height/2);
+camflip.addAnimation('imgs/camflip/camflip.anims');
+var CAMUP = false;
+camflip.visible = false;
 
 function start(){
 	mouse.start(canvas);
@@ -92,9 +98,21 @@ function loop(){
 
 	if(started){
 		office.draw();
+		camflip.draw();
+		buster.draw();
+		if(keys.down('s')){
+			if(CAMUP){
+				camflip.animation.play('close').then(e=>{
+					camflip.visible = false;
+				});
+			} else {
+				camflip.visible = true;
+				camflip.animation.play('open');
+			}
+			CAMUP = !CAMUP;
+			keys.keys['s'] = false;
+		}
 	}
-
-	buster.draw();
 }
 
 function startGame(){

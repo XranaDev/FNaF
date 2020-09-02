@@ -285,6 +285,7 @@ class Sprite extends Hitbox{
 		this.animation;
 		this.transformX = 1;
 		this.sliding = false;
+		this.visible = true;
 		this.element.onload = function(){
 			if(once) return;
 			once = true;
@@ -294,6 +295,7 @@ class Sprite extends Hitbox{
 		this.move = data => {};
 	}
 	draw(){
+		if(!this.visible) return;
 		if(this.animation) this.animation.loop();
 		if(this.sliding) {
 			if(this.#iter <= this.#max_iter){

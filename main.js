@@ -58,7 +58,9 @@ class Button{
 var b1 = new Button(canvas.width/2,canvas.height/2,100,50,startGame,makeImg('imgs/Play.png'));
 var started = false;
 var buster = new Sprite('imgs/btb/0.png');
-buster.addAnimation('imgs/btb/btb.anims');
+buster.addAnimation('imgs/btb/btb.anims').then(e=>{
+	buster.animation.play('spin',true);
+});
 buster.position = new Vector(300,300);
 buster.visible = false;
 var camflip = new Sprite('imgs/camflip/5.png');
@@ -77,7 +79,7 @@ office.position = new Vector(canvas.width/2,canvas.height/2);
 var door = new Sprite('imgs/DoorFrames/0.png');
 door.addAnimation('imgs/DoorFrames/door.anims');
 door.position = new Vector(canvas.width/2,canvas.height/2);
-door.visible = true;
+door.visible = false;
 var dooropen = true;
 
 function start(){
@@ -100,13 +102,16 @@ function loop(){
 		door.draw();
 		camflip.draw();
 		buster.draw();
+		ctx.globalAlpha = .4;
 		static.draw();
+		ctx.globalAlpha = 1;
 		if(keys.down('s')){
 			if(CAMUP){
 				static.visible = false;
 				audio.stop('sounds/camup.ogg');
 				audio.stop('sounds/cam.ogg');
 				audio.play('sounds/camdown.ogg');
+				buster.visible = false;
 				camflip.animation.play('close').then(e=>{
 					camflip.visible = false;
 				});
@@ -117,6 +122,7 @@ function loop(){
 				})
 				camflip.animation.play('open').then(e=>{
 					static.visible = true;
+					buster.visible = true;
 				});
 			}
 			CAMUP = !CAMUP;

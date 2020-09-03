@@ -2,19 +2,6 @@ const canvas = obj('canvas');
 const ctx = canvas.getContext('2d');
 
 (function(gb){
-	var office = {};
-	gb.office = office;
-
-
-	office.draw = function(){
-
-	}
-
-
-
-})(this);
-
-(function(gb){
 	var cameras = {}
 	gb.cameras = cameras;
 
@@ -74,12 +61,24 @@ var buster = new Sprite('imgs/btb/0.png');
 buster.addAnimation('imgs/btb/btb.anims');
 buster.position = new Vector(300,300);
 buster.visible = false;
-
 var camflip = new Sprite('imgs/camflip/5.png');
 camflip.position = new Vector(canvas.width/2,canvas.height/2);
 camflip.addAnimation('imgs/camflip/camflip.anims');
 var CAMUP = false;
 camflip.visible = false;
+var static = new Sprite('imgs/static/0.png');
+static.visible = false;
+static.addAnimation('imgs/static/static.anims').then(e=>{
+	static.animation.play('static',true);
+});
+static.position = new Vector(canvas.width/2,canvas.height/2);
+var office = new Sprite('imgs/Office.png');
+office.position = new Vector(canvas.width/2,canvas.height/2);
+var door = new Sprite('imgs/DoorFrames/0.png');
+door.addAnimation('imgs/DoorFrames/door.anims');
+door.position = new Vector(canvas.width/2,canvas.height/2);
+door.visible = true;
+var dooropen = true;
 
 function start(){
 	mouse.start(canvas);
@@ -98,19 +97,42 @@ function loop(){
 
 	if(started){
 		office.draw();
+		door.draw();
 		camflip.draw();
 		buster.draw();
+		static.draw();
 		if(keys.down('s')){
 			if(CAMUP){
+				static.visible = false;
+				audio.stop('sounds/camup.ogg');
+				audio.stop('sounds/cam.ogg');
+				audio.play('sounds/camdown.ogg');
 				camflip.animation.play('close').then(e=>{
 					camflip.visible = false;
 				});
 			} else {
 				camflip.visible = true;
-				camflip.animation.play('open');
+				audio.play('sounds/camup.ogg').then(e=>{
+					audio.play('sounds/cam.ogg',true);
+				})
+				camflip.animation.play('open').then(e=>{
+					static.visible = true;
+				});
 			}
 			CAMUP = !CAMUP;
 			keys.keys['s'] = false;
+		}
+		if(keys.down('w')){
+			if(dooropen){
+				door.visible = true;
+				door.animation.play('close');
+			} else {
+				door.animation.play('open').then(e=>{
+					door.visible = false;
+				});
+			}
+			dooropen = !dooropen;
+			keys.keys['w'] = false;
 		}
 	}
 }
@@ -118,6 +140,7 @@ function loop(){
 function startGame(){
 	b1.hide();
 	started = true;
+	canvas.requestFullscreen();
 }
 
 start();

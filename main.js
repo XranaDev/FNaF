@@ -28,7 +28,6 @@ class Button{
 		if(mouse.down&&mouse.pos.x>this.x-this.w/2&&mouse.pos.x<this.x+this.w/2&&mouse.pos.y>this.y-this.h/2&&mouse.pos.y<this.y+this.h/2){
 			this.click();
 		}
-
 	}
 	hide(){
 		this.visible = false;
@@ -70,9 +69,11 @@ function makeImg(path){
 		camera.buttons.push(b);
 	}
 
+	var map = makeImg('imgs/map/0.png');
 
 	camera.draw = function(){
 		if(this.visible){
+			ctx.drawImage(map,500,300);
 			for(let button of camera.buttons){
 				button.draw();
 			}

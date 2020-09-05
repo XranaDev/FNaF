@@ -57,6 +57,8 @@ function makeImg(path){
 
 	function setCamTo(index){
 		camera.current = index;
+		audio.play('sounds/camswitch.ogg',false,.3);
+		mouse.down = false;
 	}
 
 	let imgs = [];
@@ -69,7 +71,7 @@ function makeImg(path){
 		camera.buttons.push(b);
 	}
 
-	var map = makeImg('imgs/map/1.png');
+	var map = makeImg('imgs/map/0.png');
 
 	camera.draw = function(){
 		if(this.visible){
@@ -79,6 +81,12 @@ function makeImg(path){
 			for(let button of camera.buttons){
 				button.draw();
 			}
+			let ix = camera.current;
+			ctx.beginPath();
+			ctx.rect(cam_pos[ix].x-25,cam_pos[ix].y-15,50,30);
+			ctx.strokeStyle = 'red';
+			ctx.lineWidth = 5;
+			ctx.stroke();
 		}
 	}
 

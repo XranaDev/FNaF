@@ -85,8 +85,6 @@ var dooropen = true;
 function start(){
 	mouse.start(canvas);
 	keys.start();
-
-
 	loop();
 }
 
@@ -152,6 +150,7 @@ function startGame(){
 	b1.hide();
 	started = true;
 	canvas.requestFullscreen();
+	audio.play('sounds/fan.ogg',true,.05);
 }
 
 start();

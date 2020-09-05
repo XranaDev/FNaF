@@ -132,7 +132,9 @@ function loop(){
 			if(dooropen){
 				door.visible = true;
 				door.animation.play('close');
+				audio.play('sounds/door.ogg');
 			} else {
+				audio.play('sounds/door.ogg');
 				door.animation.play('open').then(e=>{
 					door.visible = false;
 				});

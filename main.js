@@ -1,23 +1,6 @@
 const canvas = obj('canvas');
 const ctx = canvas.getContext('2d');
 
-(function(gb){
-	var cameras = {}
-	gb.cameras = cameras;
-
-
-	cameras.draw = function(){
-
-	}
-
-})(this);
-
-function makeImg(path){
-	let img = new Image;
-	img.src = path;
-	return img;
-}
-
 class Button{
 	constructor(x,y,w,h,callback,img){
 		this.x = x;
@@ -28,7 +11,7 @@ class Button{
 		this.click = callback;
 		this.visible = true;
 	}
-	draw(color='white'){
+	draw(color='transparent'){
 		if(!this.visible) return;
 		ctx.beginPath();
 		ctx.save();
@@ -54,6 +37,50 @@ class Button{
 		this.visible = true;
 	}
 }
+
+
+function makeImg(path){
+	let img = new Image;
+	img.src = path;
+	return img;
+}
+
+
+(function(gb){
+	var cameras = {}
+	gb.camera = cameras;
+	
+	camera.current = 0;
+	camera.visible = false;
+	camera.buttons = [];
+
+	var cam_pos = [new Vector(100,100),new Vector(100,200),new Vector(100,300),new Vector(100,400),new Vector(100,500)];
+
+	function setCamTo(index){
+
+	}
+
+	let imgs = [];
+
+	for(let i=0;i<5;i++){
+		imgs.push(makeImg(`imgs/camButtons/${i}.png`));
+		let b = new Button(cam_pos[i].x,cam_pos[i].y,80,60,click=>{
+			setCamTo(i);
+		},imgs[i]);
+		camera.buttons.push(b);
+	}
+
+
+	camera.draw = function(){
+		if(this.visible){
+			for(let button of camera.buttons){
+				button.draw();
+			}
+		}
+	}
+
+})(this);
+
 
 var b1 = new Button(canvas.width/2,canvas.height/2,100,50,startGame,makeImg('imgs/Play.png'));
 var started = false;
@@ -93,7 +120,7 @@ function loop(){
 	ctx.clearRect(-2,-2,canvas.width+2,canvas.height+2);
 	setTimeout(loop,1000/45);
 
-	b1.draw('green');
+	b1.draw();
 
 	if(started){
 		office.draw();
@@ -103,13 +130,15 @@ function loop(){
 		ctx.globalAlpha = .4;
 		static.draw();
 		ctx.globalAlpha = 1;
+		camera.draw();
 		if(keys.down('s')){
 			if(CAMUP){
 				static.visible = false;
+				camera.visible = false;
+				buster.visible = false;
 				audio.stop('sounds/camup.ogg');
 				audio.stop('sounds/cam.ogg');
 				audio.play('sounds/camdown.ogg',false,.3);
-				buster.visible = false;
 				camflip.animation.play('close').then(e=>{
 					camflip.visible = false;
 				});
@@ -121,6 +150,7 @@ function loop(){
 				camflip.animation.play('open').then(e=>{
 					static.visible = true;
 					buster.visible = true;
+					camera.visible = true;
 				});
 			}
 			CAMUP = !CAMUP;

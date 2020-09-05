@@ -63,17 +63,17 @@ function makeImg(path){
 
 	for(let i=0;i<5;i++){
 		imgs.push(makeImg(`imgs/camButtons/${i}.png`));
-		let b = new Button(cam_pos[i].x,cam_pos[i].y,80,60,click=>{
+		let b = new Button(cam_pos[i].x,cam_pos[i].y,60,40,click=>{
 			setCamTo(i);
 		},imgs[i]);
 		camera.buttons.push(b);
 	}
 
-	var map = makeImg('imgs/map/0.png');
+	var map = makeImg('imgs/map/1.png');
 
 	camera.draw = function(){
 		if(this.visible){
-			ctx.drawImage(map,500,300);
+			ctx.drawImage(map,500,100);
 			for(let button of camera.buttons){
 				button.draw();
 			}

@@ -110,14 +110,14 @@ function loop(){
 				static.visible = false;
 				audio.stop('sounds/camup.ogg');
 				audio.stop('sounds/cam.ogg');
-				audio.play('sounds/camdown.ogg');
+				audio.play('sounds/camdown.ogg',false,.3);
 				buster.visible = false;
 				camflip.animation.play('close').then(e=>{
 					camflip.visible = false;
 				});
 			} else {
 				camflip.visible = true;
-				audio.play('sounds/camup.ogg').then(e=>{
+				audio.play('sounds/camup.ogg',false,.3).then(e=>{
 					audio.play('sounds/cam.ogg',true);
 				})
 				camflip.animation.play('open').then(e=>{
@@ -128,21 +128,24 @@ function loop(){
 			CAMUP = !CAMUP;
 			keys.keys['s'] = false;
 		}
-		if(keys.down('w')){
-			if(dooropen){
-				door.visible = true;
-				door.animation.play('close');
-				audio.play('sounds/door.ogg');
-			} else {
-				audio.play('sounds/door.ogg');
-				door.animation.play('open').then(e=>{
-					door.visible = false;
-				});
-			}
-			dooropen = !dooropen;
-			keys.keys['w'] = false;
-		}
+		if(keys.down('w')) toggleDoor();
 	}
+}
+
+function toggleDoor(){
+	if(CAMUP) return;
+	if(dooropen){
+		door.visible = true;
+		door.animation.play('close');
+		audio.play('sounds/door.ogg',false,.2);
+	} else {
+		audio.play('sounds/door.ogg',false,.2);
+		door.animation.play('open').then(e=>{
+			door.visible = false;
+		});
+	}
+	dooropen = !dooropen;
+	keys.keys['w'] = false;
 }
 
 function startGame(){

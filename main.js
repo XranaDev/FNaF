@@ -53,7 +53,7 @@ function makeImg(path){
 	camera.visible = false;
 	camera.buttons = [];
 
-	var cam_pos = [new Vector(100,100),new Vector(100,200),new Vector(100,300),new Vector(100,400),new Vector(100,500)];
+	var cam_pos = [new Vector(531,237),new Vector(680,298),new Vector(643,213),new Vector(816,293),new Vector(734,106),new Vector(762,376)];
 
 	function setCamTo(index){
 
@@ -61,9 +61,9 @@ function makeImg(path){
 
 	let imgs = [];
 
-	for(let i=0;i<5;i++){
-		imgs.push(makeImg(`imgs/camButtons/${i}.png`));
-		let b = new Button(cam_pos[i].x,cam_pos[i].y,60,40,click=>{
+	for(let i=0;i<6;i++){
+		imgs.push(makeImg(`imgs/camButtons/${i+1}.png`));
+		let b = new Button(cam_pos[i].x,cam_pos[i].y,50,30,click=>{
 			setCamTo(i);
 		},imgs[i]);
 		camera.buttons.push(b);

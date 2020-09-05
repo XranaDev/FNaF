@@ -56,7 +56,7 @@ function makeImg(path){
 	var cam_pos = [new Vector(531,237),new Vector(680,298),new Vector(643,213),new Vector(816,293),new Vector(734,106),new Vector(762,376)];
 
 	function setCamTo(index){
-
+		camera.current = index;
 	}
 
 	let imgs = [];
@@ -73,7 +73,9 @@ function makeImg(path){
 
 	camera.draw = function(){
 		if(this.visible){
+			ctx.fillStyle = 'white';
 			ctx.drawImage(map,500,100);
+			ctx.fillText(`Camera 0${camera.current+1}`,40,60);
 			for(let button of camera.buttons){
 				button.draw();
 			}
@@ -118,6 +120,7 @@ function start(){
 
 
 function loop(){
+	ctx.font = '20px ps2p';
 	ctx.clearRect(-2,-2,canvas.width+2,canvas.height+2);
 	setTimeout(loop,1000/45);
 

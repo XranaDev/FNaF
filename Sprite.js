@@ -89,7 +89,7 @@ class Animation{
 		this.element = element;
 		this.current_frame = 0;
 		this.#animID=0;
-		this.#frLists = file.frames.map(e=>e.frames)
+		this.#frLists = file.frames.map(e=>e.frames);
 		this.names = file.frames.map(e=>e.name);
 		this.fps = 30;
 		this.frame_count = file.count;
@@ -98,13 +98,19 @@ class Animation{
 		this.playing = false;
 		this.name = "";
 		this.last_time = new Date().getTime();
-		this.next_frame = document.createElement('img');
+		this.next_frame = null;
 		this.end = () => {};
 		for(let i=0;i<this.frame_count;i++){
-			this.frames.push(this.pad(i));
+			this.frames.push(createImage(this.pad(i)));
 		}
-		this.element.src = this.frames[0];
-		this.next_frame.src = this.frames[0];
+		this.element.src = this.frames[0].src;
+		this.next_frame = this.frames[0];
+
+		function createImage(path){
+			let i = document.createElement('img');
+			i.src = path;
+			return i;
+		}
 	}
 	pad(n){
 		let len = (this.frame_count+'').length;
@@ -118,7 +124,7 @@ class Animation{
 			if(this.current_frame<this.#frLists[this.#animID].length){
 				let id = this.#animID;
 				this.element.src = this.next_frame.src;
-				this.next_frame.src=this.frames[this.#frLists[id][this.current_frame]];
+				this.next_frame = this.frames[this.#frLists[id][this.current_frame]];
 				this.current_frame++;
 			} else {
 				if(this.isLoop){
@@ -148,7 +154,7 @@ class Animation{
 			this.#animID = index;
 			this.name = name;
 			this.current_frame = 1;
-			this.next_frame.src = this.frames[this.#frLists[index][Math.min(0,this.#frLists[index].length)]];
+			this.next_frame = this.frames[this.#frLists[index][Math.min(0,this.#frLists[index].length)]];
 			this.last_time = new Date().getTime();
 			this.#prom = new Promise(resolve=>{
 				THIS.end=c=>{
@@ -164,7 +170,7 @@ class Animation{
 	stop(){
 		let arr = this.#frLists[this.#animID];
 		if(arr){
-			this.element.src = this.frames[arr[arr.length-1]];
+			this.element.src = this.frames[arr[arr.length-1]].src;
 		}
 		this.playing = false;
 		this.isLoop = false;

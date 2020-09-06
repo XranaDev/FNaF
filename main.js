@@ -143,37 +143,44 @@ function loop(){
 		static.draw();
 		ctx.globalAlpha = 1;
 		camera.draw();
-		if(keys.down('s')){
-			if(CAMUP){
-				static.visible = false;
-				camera.visible = false;
-				buster.visible = false;
-				audio.stop('sounds/camup.ogg');
-				audio.stop('sounds/cam.ogg');
-				audio.play('sounds/camdown.ogg',false,.3);
-				camflip.animation.play('close').then(e=>{
-					camflip.visible = false;
-				});
-			} else {
-				camflip.visible = true;
-				audio.play('sounds/camup.ogg',false,.3).then(e=>{
-					audio.play('sounds/cam.ogg',true);
-				})
-				camflip.animation.play('open').then(e=>{
-					static.visible = true;
-					buster.visible = true;
-					camera.visible = true;
-				});
-			}
-			CAMUP = !CAMUP;
-			keys.keys['s'] = false;
-		}
+		door.wait = Math.max(0,door.wait-1);
+		camflip.wait = Math.max(0,camflip.wait-1);
+		if(keys.down('s')) toggleCamera();
 		if(keys.down('w')) toggleDoor();
 	}
 }
 
+function toggleCamera(){
+	if(door.wait !== 0) return;
+	door.wait = 15;
+	if(CAMUP){
+		static.visible = false;
+		camera.visible = false;
+		buster.visible = false;
+		audio.stop('sounds/camup.ogg');
+		audio.stop('sounds/cam.ogg');
+		audio.play('sounds/camdown.ogg',false,.3);
+		camflip.animation.play('close').then(e=>{
+			camflip.visible = false;
+		});
+	} else {
+		camflip.visible = true;
+		audio.play('sounds/camup.ogg',false,.3).then(e=>{
+			audio.play('sounds/cam.ogg',true);
+		})
+		camflip.animation.play('open').then(e=>{
+			static.visible = true;
+			buster.visible = true;
+			camera.visible = true;
+		});
+	}
+	CAMUP = !CAMUP;
+	keys.keys['s'] = false;
+}
+
 function toggleDoor(){
-	if(CAMUP) return;
+	if(CAMUP || camflip.wait !== 0) return;
+	camflip.wait = 30;
 	if(dooropen){
 		door.visible = true;
 		door.animation.play('close');
@@ -193,6 +200,8 @@ function startGame(){
 	started = true;
 	canvas.requestFullscreen();
 	audio.play('sounds/fan.ogg',true,.05);
+	camflip.wait = 0;
+	door.wait = 0;
 }
 
 start();

@@ -83,6 +83,9 @@ function makeImg(path){
 			let cam_image = cams[camera.current];
 			ctx.drawImage(cam_image,canvas.width/2-944/2,canvas.height/2-548/2,944,548);
 
+			
+			buster.draw();
+
 			ctx.globalAlpha = .4;
 			static.draw();
 			ctx.globalAlpha = 1;
@@ -150,7 +153,6 @@ function loop(){
 		office.draw();
 		door.draw();
 		camflip.draw();
-		buster.draw();
 		camera.draw();
 		door.wait = Math.max(0,door.wait-1);
 		camflip.wait = Math.max(0,camflip.wait-1);

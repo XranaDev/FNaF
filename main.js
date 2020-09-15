@@ -55,6 +55,11 @@ function makeImg(path){
 
 	var cam_pos = [new Vector(531,237),new Vector(680,298),new Vector(643,213),new Vector(816,293),new Vector(734,106),new Vector(762,376)];
 
+	var cams = [];
+	for(let i=0;i<6;i++){
+		cams.push(makeImg(`imgs/camBackgrounds/${i}.png`));
+	}
+
 	function setCamTo(index){
 		camera.current = index;
 		audio.play('sounds/camswitch.ogg',false,.3);
@@ -75,6 +80,13 @@ function makeImg(path){
 
 	camera.draw = function(){
 		if(this.visible){
+			let cam_image = cams[camera.current];
+			ctx.drawImage(cam_image,canvas.width/2-944/2,canvas.height/2-548/2,944,548);
+
+			ctx.globalAlpha = .4;
+			static.draw();
+			ctx.globalAlpha = 1;
+
 			ctx.fillStyle = 'white';
 			ctx.drawImage(map,500,100);
 			ctx.fillText(`Camera 0${camera.current+1}`,40,60);
@@ -139,9 +151,6 @@ function loop(){
 		door.draw();
 		camflip.draw();
 		buster.draw();
-		ctx.globalAlpha = .4;
-		static.draw();
-		ctx.globalAlpha = 1;
 		camera.draw();
 		door.wait = Math.max(0,door.wait-1);
 		camflip.wait = Math.max(0,camflip.wait-1);
